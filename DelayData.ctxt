@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.params=
+comment0.target=DelayData()
+comment0.text=\r\n\ Constructor\ for\ objects\ of\ class\ DelayData\r\n
+comment1.params=d
+comment1.target=void\ setPropagationDelay(int)
+comment2.params=d
+comment2.target=void\ setTransmissionDelay(int)
+numComments=3

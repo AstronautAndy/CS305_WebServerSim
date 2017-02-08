@@ -9,10 +9,13 @@ public class ClientApp
     public static void main(String[] args) throws Exception
     {
         //create a new transport layer for client (hence false) (connect to server), and read in first line from keyboard
-        TransportLayer transportLayer = new TransportLayer(false);
+        int delay = 0;
+        DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
+        DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
+        TransportLayer transportLayer = new TransportLayer(false, delay);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
-
+        
         //while line is not empty
         while( line != null && !line.equals("") )
         {
