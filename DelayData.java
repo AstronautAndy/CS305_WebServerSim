@@ -21,10 +21,12 @@ public class DelayData
     
     public static void setPropagationDelay(int d){
         PropagationDelay = d;
+        //System.out.println("Propagation Delay has been set");
     }
     
     public static void setTransmissionDelay(int d){
         transmissionDelay = d;
+        //System.out.println("Transmission Delay has been set");
     }
 
 }
