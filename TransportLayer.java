@@ -34,8 +34,11 @@ public class TransportLayer
 
     public byte[] receive()
     {
-        
-        byte[] payload = networkLayer.receive();    
-        return payload;
+        byte[] payload = networkLayer.receive(); 
+        switch(payload[0]){ //If the program is acting fishy, remove this block
+           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); // Send the acknowledgement message back to the requesting tLayer
+           default: System.out.println("Default case"); return payload;
+        }
+        //return payload;
     }
 }
