@@ -17,13 +17,19 @@ public class ServerApp
         int delay = 0;
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
-        TransportLayer transportLayer = new TransportLayer(true, delay);
+        TransportLayer transportLayer = new TransportLayer(true);
+        
         while( true )
         {
             //receive message from client, and send the "received" message back.
             byte[] byteArray = transportLayer.receive();
+
             //Place code here that does different things with the different typed of byte encodings received
-            
+            /*
+            switch(byteArray[0]){ //USe a switch statement to handle each of the potential header values
+                case 0: transportLayer.send(ackMessage);
+            }
+            */
             //if client disconnected
             if(byteArray==null)
                 break;

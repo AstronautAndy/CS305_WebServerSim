@@ -4,10 +4,12 @@
  */
 public class TransportLayer
 {
-
+    byte ack = 1; //Represents a simple TCP acknowledgement that the server has received an open request from the client
+    byte[] ackMessage = {ack}; //A simple, one element array of bytes
     private NetworkLayer networkLayer;
+    
     //server is true if the application is a server (should listen) or false if it is a client (should try and connect)
-    public TransportLayer(boolean server, int delay) //Include a pointer to the delay from the Client/Server app
+    public TransportLayer(boolean server) //Include a pointer to the delay from the Client/Server app
     {
         networkLayer = new NetworkLayer(server);
     }
@@ -32,6 +34,7 @@ public class TransportLayer
 
     public byte[] receive()
     {
+        
         byte[] payload = networkLayer.receive();    
         return payload;
     }

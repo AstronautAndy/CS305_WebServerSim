@@ -21,9 +21,10 @@ public class ClientApp
         int delay = 0;
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
-        TransportLayer transportLayer = new TransportLayer(false, delay);
+        TransportLayer transportLayer = new TransportLayer(false);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
+        int code = 0; //Change the code upon reading certain signals from the server
         
         //while line is not empty
         while( line != null && !line.equals("") )
