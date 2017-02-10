@@ -22,6 +22,7 @@ public class ServerApp
         {
             //receive message from client, and send the "received" message back.
             byte[] byteArray = transportLayer.receive();
+            //Place code here that does different things with the different typed of byte encodings received
             
             //if client disconnected
             if(byteArray==null)

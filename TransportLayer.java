@@ -1,4 +1,7 @@
 
+/**
+ * The transport layer needs to implement a 3-way handshake
+ */
 public class TransportLayer
 {
 
@@ -8,9 +11,22 @@ public class TransportLayer
     {
         networkLayer = new NetworkLayer(server);
     }
-
+    
+    /**
+     * Whenever the program sends a messages, it needs to send a TCP message, wait for
+     * an acknowledgement, then send a request message.
+     */
     public void send(byte[] payload)
     {
+        //Enable delay period
+        int pDelay = payload.length *  DelayData.PropagationDelay; //P. delay needs to scale
+        //System.out.println(pDelay);
+        try{
+            Thread.sleep(pDelay); 
+            Thread.sleep(DelayData.transmissionDelay);
+        }catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
         networkLayer.send( payload );
     }
 

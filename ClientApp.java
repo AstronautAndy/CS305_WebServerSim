@@ -3,6 +3,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 //This class represents the client application
+/**
+ * The client needs to be able to print out the webpage being requested
+ */
 public class ClientApp
 {
     /**
@@ -25,7 +28,7 @@ public class ClientApp
         //while line is not empty
         while( line != null && !line.equals("") )
         {
-            //convert lines into byte array, send to transoport layer and wait for response
+            //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             transportLayer.send( byteArray );
             byteArray = transportLayer.receive();

@@ -3,6 +3,7 @@ comment0.params=server\ delay
 comment0.target=TransportLayer(boolean,\ int)
 comment1.params=payload
 comment1.target=void\ send(byte[])
+comment1.text=\r\n\ Whenever\ the\ program\ sends\ a\ messages,\ it\ needs\ to\ send\ a\ TCP\ message,\ wait\ for\r\n\ an\ acknowledgement,\ then\ send\ a\ request\ message.\r\n
 comment2.params=
 comment2.target=byte[]\ receive()
 numComments=3
