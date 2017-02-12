@@ -4,7 +4,9 @@
  */
 public class TransportLayer
 {
+    byte sys = 0;
     byte ack = 1; //Represents a simple TCP acknowledgement that the server has received an open request from the client
+    byte[] sysMessage = {sys};
     byte[] ackMessage = {ack}; //A simple, one element array of bytes
     private NetworkLayer networkLayer;
     
@@ -15,6 +17,17 @@ public class TransportLayer
     }
     
     /**
+     * Method that the client application layer will use to open a connection. Forms the first part of the 
+     * 3-way handshake, and returns "true" should the second part (receiving the 'ack' message from the 
+     * server) succeed.
+     */
+    public boolean requestOpening(){
+        send(sysMessage);
+        //Now needs a means of listening for the ack message and returning true if the Transport Layer receives said message
+        return true;
+    }
+    
+    /**
      * Whenever the program sends a messages, it needs to send a TCP message, wait for
      * an acknowledgement, then send a request message.
      */
@@ -22,7 +35,7 @@ public class TransportLayer
     {
         //Enable delay period
         int pDelay = payload.length *  DelayData.PropagationDelay; //P. delay needs to scale
-        //System.out.println(pDelay);
+        System.out.println("Now sending payload with header: " + payload[0]);
         try{
             Thread.sleep(pDelay); 
             Thread.sleep(DelayData.transmissionDelay);
@@ -35,6 +48,7 @@ public class TransportLayer
     public byte[] receive()
     {
         byte[] payload = networkLayer.receive(); 
+        System.out.println("Now receiving payload with header: " + payload[0]); 
         switch(payload[0]){ //If the program is acting fishy, remove this block
            case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); // Send the acknowledgement message back to the requesting tLayer
            default: System.out.println("Default case"); return payload;

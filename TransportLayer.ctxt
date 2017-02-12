@@ -1,9 +1,12 @@
 #BlueJ class context
 comment0.params=server
 comment0.target=TransportLayer(boolean)
-comment1.params=payload
-comment1.target=void\ send(byte[])
-comment1.text=\r\n\ Whenever\ the\ program\ sends\ a\ messages,\ it\ needs\ to\ send\ a\ TCP\ message,\ wait\ for\r\n\ an\ acknowledgement,\ then\ send\ a\ request\ message.\r\n
-comment2.params=
-comment2.target=byte[]\ receive()
-numComments=3
+comment1.params=
+comment1.target=boolean\ requestOpening()
+comment1.text=\r\n\ Method\ that\ the\ client\ application\ layer\ will\ use\ to\ open\ a\ connection.\ Forms\ the\ first\ part\ of\ the\ \r\n\ 3-way\ handshake,\ and\ returns\ "true"\ should\ the\ second\ part\ (receiving\ the\ 'ack'\ message\ from\ the\ \r\n\ server)\ succeed.\r\n
+comment2.params=payload
+comment2.target=void\ send(byte[])
+comment2.text=\r\n\ Whenever\ the\ program\ sends\ a\ messages,\ it\ needs\ to\ send\ a\ TCP\ message,\ wait\ for\r\n\ an\ acknowledgement,\ then\ send\ a\ request\ message.\r\n
+comment3.params=
+comment3.target=byte[]\ receive()
+numComments=4
