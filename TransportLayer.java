@@ -6,8 +6,10 @@ public class TransportLayer
 {
     byte sys = 0;
     byte ack = 1; //Represents a simple TCP acknowledgement that the server has received an open request from the client
+    byte objReq = 2;
     byte[] sysMessage = {sys};
     byte[] ackMessage = {ack}; //A simple, one element array of bytes
+    byte[] objMessage = {objReq};
     private NetworkLayer networkLayer;
     boolean acknowledgement = false;
     
@@ -25,6 +27,7 @@ public class TransportLayer
     public boolean requestOpening(){
         System.out.println("Client is requesting opening");
         send(sysMessage);
+        System.out.println("Acknowledgement state is: " + acknowledgement);
         if(acknowledgement == true){
             acknowledgement = false; //set acknowledgement state back to false (default)
             return true;
@@ -59,11 +62,27 @@ public class TransportLayer
     {
         byte[] payload = networkLayer.receive(); 
         System.out.println("Now receiving payload with header: " + payload[0]); 
-        switch(payload[0]){ //If the program is acting fishy, remove this block
-           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); return payload; // Send the acknowledgement message back to the requesting tLayer
-           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; return payload;
-           default: System.out.println("Default case"); return payload;
+        if(payload[0] == 0){
+            System.out.println("processed open connection request: sending acknowledgement"); 
+            send(ackMessage);
         }
-        //return payload;
+        else if(payload[0] == 1){
+            System.out.println("Acknowledgement has been received. Send object request"); 
+            acknowledgement = true;
+            send(objMessage);
+        }
+        else{
+            System.out.println("Default case");
+        }
+        /*
+        switch(payload[0]){ //If the program is acting fishy, remove this block
+           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); break; // Send the acknowledgement message back to the requesting tLayer
+           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; break;
+           default: System.out.println("Default case"); break;
+        }
+        */
+        //System.out.println("Exited switch statement");
+        System.out.println("Payload header being returned in receive(): " + payload[0]);
+        return payload;
     }
 }
