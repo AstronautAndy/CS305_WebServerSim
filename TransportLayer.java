@@ -9,6 +9,7 @@ public class TransportLayer
     byte[] sysMessage = {sys};
     byte[] ackMessage = {ack}; //A simple, one element array of bytes
     private NetworkLayer networkLayer;
+    boolean acknowledgement = false;
     
     //server is true if the application is a server (should listen) or false if it is a client (should try and connect)
     public TransportLayer(boolean server) //Include a pointer to the delay from the Client/Server app
@@ -22,9 +23,18 @@ public class TransportLayer
      * server) succeed.
      */
     public boolean requestOpening(){
+        System.out.println("Client is requesting opening");
         send(sysMessage);
+        if(acknowledgement == true){
+            acknowledgement = false; //set acknowledgement state back to false (default)
+            return true;
+        }
+        else{
+            return false;
+        }
+        
         //Now needs a means of listening for the ack message and returning true if the Transport Layer receives said message
-        return true;
+        
     }
     
     /**
@@ -50,7 +60,8 @@ public class TransportLayer
         byte[] payload = networkLayer.receive(); 
         System.out.println("Now receiving payload with header: " + payload[0]); 
         switch(payload[0]){ //If the program is acting fishy, remove this block
-           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); // Send the acknowledgement message back to the requesting tLayer
+           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); return payload; // Send the acknowledgement message back to the requesting tLayer
+           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; return payload;
            default: System.out.println("Default case"); return payload;
         }
         //return payload;

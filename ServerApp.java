@@ -24,12 +24,6 @@ public class ServerApp
             //receive message from client, and send the "received" message back.
             byte[] byteArray = transportLayer.receive();
 
-            //Place code here that does different things with the different typed of byte encodings received
-            /*
-            switch(byteArray[0]){ //USe a switch statement to handle each of the potential header values
-                case 0: transportLayer.send(ackMessage);
-            }
-            */
             //if client disconnected
             if(byteArray==null)
                 break;
@@ -38,7 +32,7 @@ public class ServerApp
             String line = "received";
             byteArray = line.getBytes();
             transportLayer.send( byteArray );
-
+            
         }
     }
 }

@@ -37,6 +37,7 @@ public class ClientApp
         {
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
+            transportLayer.requestOpening();
             transportLayer.send( byteArray );
             byteArray = transportLayer.receive();
             String str = new String ( byteArray );
