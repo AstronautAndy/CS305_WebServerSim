@@ -25,13 +25,6 @@ public class TransportLayer
      * server) succeed.
      */
     public boolean requestOpening(){
-        /*
-        switch(payload[0]){ //If the program is acting fishy, remove this block
-           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); break; // Send the acknowledgement message back to the requesting tLayer
-           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; break;
-           default: System.out.println("Default case"); break;
-        }
-        */
         System.out.println("Client is requesting opening");
         send(sysMessage);
         byte[] response = receive();
@@ -47,14 +40,13 @@ public class TransportLayer
     }
     
     /**
-     * Whenever the program sends a messages, it needs to send a TCP message, wait for
-     * an acknowledgement, then send a request message.
+     * Basic function used to send messages between Client and Server
      */
     public void send(byte[] payload)
     {
         //Enable delay period
         int pDelay = payload.length *  DelayData.PropagationDelay; //P. delay needs to scale
-        System.out.println("Now sending payload with header: " + payload[0]);
+        //System.out.println("Now sending payload with header: " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
         try{
             Thread.sleep(pDelay); 
             Thread.sleep(DelayData.transmissionDelay);
@@ -67,22 +59,8 @@ public class TransportLayer
     public byte[] receive()
     {
         byte[] payload = networkLayer.receive(); 
-        System.out.println("Now receiving payload with header: " + payload[0]); 
-        /*
-        if(payload[0] == 0){
-            System.out.println("processed open connection request: sending acknowledgement"); 
-            send(ackMessage);
-        }
-        else if(payload[0] == 1){
-            System.out.println("Acknowledgement has been received. Send object request"); 
-            acknowledgement = true;
-            send(objMessage);
-        }
-        else{
-            System.out.println("Default case");
-        }
-        */
-        System.out.println("Payload header being returned in receive(): " + payload[0]);
+        //System.out.println("Now receiving payload with header: " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
+        //System.out.println("Payload header being returned in receive(): " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
         return payload;
     }
 }
