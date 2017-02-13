@@ -43,7 +43,7 @@ public class ClientApp
                 transportLayer.send( byteArray ); //If the client is successfully able to make a connection w/ server
             }
             */
-            //transportLayer.requestOpening();
+            transportLayer.requestOpening();
             transportLayer.send( byteArray );
             byteArray = transportLayer.receive();
             String str = new String ( byteArray );

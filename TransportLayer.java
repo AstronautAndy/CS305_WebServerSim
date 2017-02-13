@@ -25,18 +25,24 @@ public class TransportLayer
      * server) succeed.
      */
     public boolean requestOpening(){
+        /*
+        switch(payload[0]){ //If the program is acting fishy, remove this block
+           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); break; // Send the acknowledgement message back to the requesting tLayer
+           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; break;
+           default: System.out.println("Default case"); break;
+        }
+        */
         System.out.println("Client is requesting opening");
         send(sysMessage);
-        System.out.println("Acknowledgement state is: " + acknowledgement);
-        if(acknowledgement == true){
-            acknowledgement = false; //set acknowledgement state back to false (default)
+        byte[] response = receive();
+        if(response[0] == 1){
+            System.out.println("Connection request has been approved by the server. Send Object request now.");
             return true;
         }
         else{
+            System.out.println("Connection request has been denied by the server.");
             return false;
         }
-        
-        //Now needs a means of listening for the ack message and returning true if the Transport Layer receives said message
         
     }
     
@@ -62,6 +68,7 @@ public class TransportLayer
     {
         byte[] payload = networkLayer.receive(); 
         System.out.println("Now receiving payload with header: " + payload[0]); 
+        /*
         if(payload[0] == 0){
             System.out.println("processed open connection request: sending acknowledgement"); 
             send(ackMessage);
@@ -74,14 +81,7 @@ public class TransportLayer
         else{
             System.out.println("Default case");
         }
-        /*
-        switch(payload[0]){ //If the program is acting fishy, remove this block
-           case 0: System.out.println("processed open connection request: sending acknowledgement"); send(ackMessage); break; // Send the acknowledgement message back to the requesting tLayer
-           case 1: System.out.println("Acknowledgement has been received. Send object request"); acknowledgement = true; break;
-           default: System.out.println("Default case"); break;
-        }
         */
-        //System.out.println("Exited switch statement");
         System.out.println("Payload header being returned in receive(): " + payload[0]);
         return payload;
     }
