@@ -5,7 +5,8 @@ import java.lang.*;
 
 //This class represents the client application
 /**
- * The client needs to be able to print out the webpage being requested
+ * The client needs to be able to print out the webpage being requested. This means that the client will send 
+ * URLs to the server for the server to retrieve.
  */
 public class ClientApp
 {
@@ -18,11 +19,14 @@ public class ClientApp
     public static void main(String[] args) throws Exception
     {
         //create a new transport layer for client (hence false) (connect to server), and read in first line from keyboard
+        
         int delay = 0;
         long timeToReceive;
         long startTime;
         long endTime;
         boolean persistent = false; //Will be non-persistent by default
+        byte objReq = 2;
+        byte[] objMessage = {objReq};
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
         if(args[2] == "1"){
@@ -42,8 +46,9 @@ public class ClientApp
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
-            if(transportLayer.requestOpening() == true){ //Remove this block if it doesn't work
-                transportLayer.send( byteArray ); //If the client is successfully able to make a connection w/ server
+            if(transportLayer.requestOpening() == true){
+                byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                transportLayer.send( sendMessage );
             }
             else{
                 System.out.println("Connection with Server has been refused.");
@@ -57,5 +62,17 @@ public class ClientApp
             System.out.println(timeToReceive + " ms");
             line = reader.readLine();
         }
+    }
+    
+    /**
+     * Method used to concatenate the object request header to the rest of the object request message 
+     * (header will always go first)
+     */
+    static byte[] concatenate(byte[] a, byte[] b){
+        byte[] newByte;
+        newByte = new byte[a.length + b.length];
+        System.arraycopy(a, 0, newByte,0,a.length);//Copy the header into the new byteArray
+        System.arraycopy(b,0, newByte,a.length,b.length);
+        return newByte;
     }
 }

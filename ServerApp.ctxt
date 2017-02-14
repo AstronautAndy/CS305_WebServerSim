@@ -2,4 +2,7 @@
 comment0.params=args
 comment0.target=void\ main(java.lang.String[])
 comment0.text=\r\n\ The\ standard\ for\ inputs\ will\ be\ as\ follows\:\r\n\ args[0]\ \=\ Propagation\ Delay\r\n\ args[1]\ \=\ Transmission\ Delay\r\n\ args[2]\ \=\ Version\ of\ HTTP\ used\ \r\n\ args[3]\ \=\ URL\ to\ the\ web\ page\ we\ want\ to\ access\r\n
-numComments=1
+comment1.params=input
+comment1.target=byte[]\ obtainMessage(byte[])
+comment1.text=\r\n\ A\ method\ used\ to\ obtain\ the\ data\ in\ an\ incoming\ message\ that\ come\ after\ the\ message\ \r\n
+numComments=2

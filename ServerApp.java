@@ -34,12 +34,25 @@ public class ServerApp
                 System.out.println("processed open connection request: sending acknowledgement"); 
                 transportLayer.send(ackMessage);
             }
+            else if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
+                byteArray = obtainMessage(byteArray); //Only save the URL request part of the message
+            }
+            
             String str = new String ( byteArray );
             System.out.println( str );
-            String line = "received";
+            String line = "received"; //Debating whether I need to keep this
             byteArray = line.getBytes();
             transportLayer.send( byteArray );
             
         }
+    }
+    
+    /**
+     * A method used to obtain the data in an incoming message that come after the message 
+     */
+    static byte[] obtainMessage(byte[] input){
+        byte[] message = new byte[input.length-1];
+        System.arraycopy(input,1,message,0,input.length-1);
+        return message;
     }
 }
