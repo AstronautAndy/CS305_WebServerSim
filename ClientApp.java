@@ -56,6 +56,12 @@ public class ClientApp
             
             byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
+            if(byteArray[0] == 3){
+                System.out.println("Code: 200");
+            }
+            else if(byteArray[0] == 4){
+                System.out.println("Code: 404, file not found");
+            }
             String str = new String ( byteArray );
             System.out.println( str );
             timeToReceive = endTime - startTime;
@@ -74,5 +80,14 @@ public class ClientApp
         System.arraycopy(a, 0, newByte,0,a.length);//Copy the header into the new byteArray
         System.arraycopy(b,0, newByte,a.length,b.length);
         return newByte;
+    }
+    
+    /**
+     * A method used to obtain the data in an incoming message that come after the message 
+     */
+    static byte[] obtainMessage(byte[] input){
+        byte[] message = new byte[input.length-1];
+        System.arraycopy(input,1,message,0,input.length-1);
+        return message;
     }
 }
