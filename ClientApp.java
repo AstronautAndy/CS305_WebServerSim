@@ -62,6 +62,10 @@ public class ClientApp
             else if(byteArray[0] == 4){
                 System.out.println("Code: 404, file not found");
             }
+            else{
+                System.out.println("Unable to retrieve code");
+            }
+            
             String str = new String ( byteArray );
             System.out.println( str );
             timeToReceive = endTime - startTime;

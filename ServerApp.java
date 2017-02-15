@@ -1,5 +1,9 @@
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.util.*;
 
 //This class represents the server application
 public class ServerApp
@@ -41,13 +45,20 @@ public class ServerApp
             else if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
                 byteArray = obtainMessage(byteArray); //Only save the URL request part of the message
                 String url = new String(byteArray); //Save the url for the object we want to search for
+                
+                try{
+                    BufferedReader in = new BufferedReader(new FileReader(url));
+                }catch(FileNotFoundException ex){
+                    //System.out.println("Exception has been caught");
+                    transportLayer.send(notFoundMessage);//Send 404 message to client
+                    ex.printStackTrace();
+                }
             }
-            
             //String str = new String ( byteArray );
             //System.out.println( str );
-            String line = "received"; //Debating whether I need to keep this
-            byteArray = line.getBytes();
-            transportLayer.send( byteArray );
+            //String line = "received"; //Debating whether I need to keep this
+            //byteArray = line.getBytes();
+            //transportLayer.send( byteArray );
             
         }
     }
@@ -72,4 +83,7 @@ public class ServerApp
         System.arraycopy(input,1,message,0,input.length-1);
         return message;
     }
+    
+    //Server app now needs some sort of simple method to "read" the "html" file
+    
 }
