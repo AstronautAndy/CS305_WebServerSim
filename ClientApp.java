@@ -46,26 +46,19 @@ public class ClientApp
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
-            if(transportLayer.requestOpening() == true){
-                byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
-                transportLayer.send( sendMessage );
-            }
-            else{
-                System.out.println("Connection with Server has been refused.");
-            }
+            
+           //If the client is non-persistent, we want it to send an open connection request each time it requests an object
+                if(transportLayer.requestOpening() == true){
+                    byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                    transportLayer.send( sendMessage );
+                }
+                else{
+                    System.out.println("Connection with Server has been refused.");
+                }
             
             byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
-            if(byteArray[0] == 3){
-                System.out.println("Code: 200");
-            }
-            else if(byteArray[0] == 4){
-                System.out.println("Code: 404, file not found");
-            }
-            else{
-                System.out.println("Unable to retrieve code");
-            }
-            
+            printError(byteArray[0]);
             String str = new String ( byteArray );
             System.out.println( str );
             timeToReceive = endTime - startTime;
@@ -93,5 +86,18 @@ public class ClientApp
         byte[] message = new byte[input.length-1];
         System.arraycopy(input,1,message,0,input.length-1);
         return message;
+    }
+    
+    /**
+     * Added this method to clean up the code a little bit
+     */
+    static void printError(byte code){
+        if(code == 3){
+                System.out.println("Code: 200");
+            }
+            else if(code == 4){
+                System.out.println("Code: 404, file not found");
+            }
+            return;
     }
 }

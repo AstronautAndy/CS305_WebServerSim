@@ -54,6 +54,7 @@ public class ServerApp
                     ex.printStackTrace();
                 }
             }
+            //Removed the default code because it isn't necessary
             //String str = new String ( byteArray );
             //System.out.println( str );
             //String line = "received"; //Debating whether I need to keep this
