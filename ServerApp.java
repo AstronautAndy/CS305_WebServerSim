@@ -48,6 +48,12 @@ public class ServerApp
                 
                 try{
                     BufferedReader in = new BufferedReader(new FileReader(url));
+                    Scanner scanner = new Scanner(in);
+                    while(scanner.hasNextLine() ){ //Send lines of text over the connection
+                        String textLine = scanner.nextLine();
+                        byteArray = textLine.getBytes();
+                        transportLayer.send(byteArray);
+                    }
                 }catch(FileNotFoundException ex){
                     //System.out.println("Exception has been caught");
                     transportLayer.send(notFoundMessage);//Send 404 message to client

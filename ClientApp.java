@@ -1,6 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.lang.*;
 
 //This class represents the client application
@@ -60,7 +61,8 @@ public class ClientApp
             endTime = System.currentTimeMillis();
             printError(byteArray[0]);
             String str = new String ( byteArray );
-            System.out.println( str );
+            //System.out.println( str );
+            RenderHTML(str); //Render the HTML code that we received from the server
             timeToReceive = endTime - startTime;
             System.out.println(timeToReceive + " ms");
             line = reader.readLine();
@@ -99,5 +101,20 @@ public class ClientApp
                 System.out.println("Code: 404, file not found");
             }
             return;
+    }
+    
+    static void RenderHTML(String htmlCode){
+        Scanner htmlScanner = new Scanner(htmlCode);
+        String token;
+        while( htmlScanner.hasNext() ){
+            token = htmlScanner.next();
+            if(token.equals("<br>") ){
+                System.out.println();
+            }
+            else{
+                System.out.print( token + " " );
+            }
+        }
+        System.out.println();
     }
 }
