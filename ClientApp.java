@@ -101,13 +101,15 @@ public class ClientApp
                     }
             
            }
-            
-            
-            
             byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
+            /*
+            if(byteArray[0] == 3){//If the received value is an object, add it to the map
+                cache.
+            }
+            */
             printError(byteArray[0]);
-            String str = new String ( byteArray );
+            String str = obtainMessage( byteArray );
             RenderHTML(str); //Render the HTML code that we received from the server
             timeToReceive = endTime - startTime;
             System.out.println(timeToReceive + " ms");
@@ -130,10 +132,11 @@ public class ClientApp
     /**
      * A method used to obtain the data in an incoming message that come after the message 
      */
-    static byte[] obtainMessage(byte[] input){
+    static String obtainMessage(byte[] input){
         byte[] message = new byte[input.length-1];
         System.arraycopy(input,1,message,0,input.length-1);
-        return message;
+        String sMessage = new String(message);
+        return sMessage;
     }
     
     /**
