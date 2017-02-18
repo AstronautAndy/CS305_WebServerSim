@@ -11,6 +11,7 @@ import java.lang.*;
  */
 public class ClientApp
 {
+    
     /**
      * The standard for inputs will be as follows:
      * args[0] = Propagation Delay
@@ -20,15 +21,15 @@ public class ClientApp
     public static void main(String[] args) throws Exception
     {
         //create a new transport layer for client (hence false) (connect to server), and read in first line from keyboard
-        
         int delay = 0;
         long timeToReceive;
         long startTime;
         long endTime;
         boolean persistent = false; //Will be non-persistent by default
-        boolean open = false;
+        boolean usesCache = false;
         byte objReq = 2;
         byte[] objMessage = {objReq};
+        
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
         
@@ -38,7 +39,7 @@ public class ClientApp
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
         int code = 0; //Change the code upon reading certain signals from the server
-        System.out.println(args[2]);
+        
         if(args[2].equals("1") ){
           System.out.println("Now opening a new persistent connection");
           persistent = true;  
@@ -48,35 +49,61 @@ public class ClientApp
             persistent = false;
         }
         
+        if(args[3].equals("1")){//Handle the condition determining whether the sim will use a cache or not
+            usesCache = true;
+        }
+        else{
+            usesCache = false;
+        }
+        
         //while line is not empty
         while( line != null && !line.equals("") )
         {
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
-            if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
-                byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
-                transportLayer.send( sendMessage );
-            }
-            else{ //If the client is non-persistent, we want it to send an open connection request each time it requests an object
-                if(transportLayer.requestOpening() == true){
-                    byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
-                    transportLayer.send( sendMessage );
+            if(usesCache == true){ //check if the cache has the value you're loooking for
+                if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
+                    System.out.println("URL found in Cache");
                 }
-                else{
-                    System.out.println("Connection with Server has been refused.");
+                else{//Otherwise, perform the standard object request procedure
+                        System.out.println("Url not found in Cache");
+                        if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
+                            byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                            transportLayer.send( sendMessage );
+                        }
+                        else{ //If the client is non-persistent, we want it to send an open connection request each time it requests an object
+                            if(transportLayer.requestOpening() == true){
+                                byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                                transportLayer.send( sendMessage );
+                            }
+                            else{
+                                System.out.println("Connection with Server has been refused.");
+                            }
+                        }
+                
                 }
-            }
+           }
+           else{ //If the program does not use a cache, send a URL request as default
+               System.out.println("Beginning standard procedure (Non-cache)");
+                   if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
+                        byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                        transportLayer.send( sendMessage );
+                    }
+                   else{ //If the client is non-persistent, we want it to send an open connection request each time it requests an object
+                        if(transportLayer.requestOpening() == true){
+                            byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                            transportLayer.send( sendMessage );
+                        }
+                        else{
+                            System.out.println("Connection with Server has been refused.");
+                        }
+                    }
             
-            /*
-                if(transportLayer.requestOpening() == true){
-                    byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
-                    transportLayer.send( sendMessage );
-                }
-                else{
-                    System.out.println("Connection with Server has been refused.");
-                }
-            */
+           }
+            
+            
+            
             byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
             printError(byteArray[0]);
