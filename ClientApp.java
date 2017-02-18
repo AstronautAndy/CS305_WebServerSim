@@ -65,6 +65,7 @@ public class ClientApp
             if(usesCache == true){ //check if the cache has the value you're loooking for
                 if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
                     System.out.println("URL found in Cache");
+                    byteArray = (byte[]) cache.get(line);
                 }
                 else{//Otherwise, perform the standard object request procedure
                         System.out.println("Url not found in Cache");
@@ -81,11 +82,11 @@ public class ClientApp
                                 System.out.println("Connection with Server has been refused.");
                             }
                         }
-                
+                        byteArray = transportLayer.receive();
                 }
            }
            else{ //If the program does not use a cache, send a URL request as default
-               System.out.println("Beginning standard procedure (Non-cache)");
+                   System.out.println("Beginning standard procedure (Non-cache)");
                    if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                         byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                         transportLayer.send( sendMessage );
@@ -99,17 +100,15 @@ public class ClientApp
                             System.out.println("Connection with Server has been refused.");
                         }
                     }
-            
+                   byteArray = transportLayer.receive();
            }
-            byteArray = transportLayer.receive();
+            //byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
-            /*
-            if(byteArray[0] == 3){//If the received value is an object, add it to the map
-                cache.
-            }
-            */
             printError(byteArray[0]);
             String str = obtainMessage( byteArray );
+            if(byteArray[0] == 3){//If the received value is an object, add it to the map
+                cache.put(line,byteArray);
+            }
             RenderHTML(str); //Render the HTML code that we received from the server
             timeToReceive = endTime - startTime;
             System.out.println(timeToReceive + " ms");

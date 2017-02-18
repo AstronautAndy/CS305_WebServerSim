@@ -19,3 +19,9 @@ designated as the first element in the byte array sent by the transport layer.
 3 - Code 200
 4 - Code 404
 5 - Code 304
+
+Here's a quick guide for myself to know which combination of args[2] and args[3] do what:
+0 0 Non persistent, no cache (Should send an open request for each object URL requested, should not access cache)WORKS
+0 1 Non Persistent, cache (Should send an open request for each object URL requested, should access cache)WORKS
+1 0 Persistent, no cache (Should not send an open request for each object URL requested, should not access cache)WORKS
+1 1 Persistent, cache (Should not send an open request for each object URL requested, should  access cache)
