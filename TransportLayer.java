@@ -59,8 +59,6 @@ public class TransportLayer
     public byte[] receive()
     {
         byte[] payload = networkLayer.receive(); 
-        //System.out.println("Now receiving payload with header: " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
-        //System.out.println("Payload header being returned in receive(): " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
         return payload;
     }
 }

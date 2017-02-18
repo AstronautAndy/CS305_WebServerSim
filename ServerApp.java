@@ -52,6 +52,7 @@ public class ServerApp
                     while(scanner.hasNextLine() ){ //Send lines of text over the connection
                         String textLine = scanner.nextLine();
                         byteArray = textLine.getBytes();
+                        byteArray = concatenate(foundMessage, byteArray);
                         transportLayer.send(byteArray);
                     }
                 }catch(FileNotFoundException ex){
@@ -73,6 +74,7 @@ public class ServerApp
     /**
      * Method used to concatenate the object request header to the rest of the object request message 
      * (header will always go first)
+     * In the case of this method, byte[] a is the header, and b is the rest of the message
      */
     static byte[] concatenate(byte[] a, byte[] b){
         byte[] newByte;

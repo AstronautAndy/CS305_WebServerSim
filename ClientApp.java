@@ -1,7 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.*;
 import java.lang.*;
 
 //This class represents the client application
@@ -32,8 +32,7 @@ public class ClientApp
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
         
-        
-        
+        HashMap cache = new HashMap();
         
         TransportLayer transportLayer = new TransportLayer(false);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -55,7 +54,6 @@ public class ClientApp
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
-            
             if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                 byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                 transportLayer.send( sendMessage );
