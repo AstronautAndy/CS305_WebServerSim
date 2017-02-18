@@ -26,20 +26,28 @@ public class ClientApp
         long startTime;
         long endTime;
         boolean persistent = false; //Will be non-persistent by default
+        boolean open = false;
         byte objReq = 2;
         byte[] objMessage = {objReq};
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
-        if(args[2] == "1"){
-          persistent = true;  
-        } else{
-            persistent = false;
-        }
+        
+        
+        
         
         TransportLayer transportLayer = new TransportLayer(false);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
         int code = 0; //Change the code upon reading certain signals from the server
+        System.out.println(args[2]);
+        if(args[2].equals("1") ){
+          System.out.println("Now opening a new persistent connection");
+          persistent = true;  
+          transportLayer.requestOpening(); //Request an open connection with the server.
+        } else{
+            System.out.println("Now opening a new non-persistent connection");
+            persistent = false;
+        }
         
         //while line is not empty
         while( line != null && !line.equals("") )
@@ -48,7 +56,11 @@ public class ClientApp
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
             
-           //If the client is non-persistent, we want it to send an open connection request each time it requests an object
+            if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
+                byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                transportLayer.send( sendMessage );
+            }
+            else{ //If the client is non-persistent, we want it to send an open connection request each time it requests an object
                 if(transportLayer.requestOpening() == true){
                     byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                     transportLayer.send( sendMessage );
@@ -56,12 +68,21 @@ public class ClientApp
                 else{
                     System.out.println("Connection with Server has been refused.");
                 }
+            }
             
+            /*
+                if(transportLayer.requestOpening() == true){
+                    byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
+                    transportLayer.send( sendMessage );
+                }
+                else{
+                    System.out.println("Connection with Server has been refused.");
+                }
+            */
             byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
             printError(byteArray[0]);
             String str = new String ( byteArray );
-            //System.out.println( str );
             RenderHTML(str); //Render the HTML code that we received from the server
             timeToReceive = endTime - startTime;
             System.out.println(timeToReceive + " ms");
