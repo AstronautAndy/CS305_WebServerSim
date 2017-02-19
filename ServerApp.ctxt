@@ -1,7 +1,7 @@
 #BlueJ class context
 comment0.params=args
 comment0.target=void\ main(java.lang.String[])
-comment0.text=\r\n\ The\ standard\ for\ inputs\ will\ be\ as\ follows\:\r\n\ args[0]\ \=\ Propagation\ Delay\r\n\ args[1]\ \=\ Transmission\ Delay\r\n\ args[2]\ \=\ Version\ of\ HTTP\ used\ \r\n\ args[3]\ \=\ URL\ to\ the\ web\ page\ we\ want\ to\ access\r\n
+comment0.text=\r\n\ The\ standard\ for\ inputs\ will\ be\ as\ follows\:\r\n\ args[0]\ \=\ Propagation\ Delay\r\n\ args[1]\ \=\ Transmission\ Delay\r\n
 comment1.params=a\ b
 comment1.target=byte[]\ concatenate(byte[],\ byte[])
 comment1.text=\r\n\ Method\ used\ to\ concatenate\ the\ object\ request\ header\ to\ the\ rest\ of\ the\ object\ request\ message\ \r\n\ (header\ will\ always\ go\ first)\r\n\ In\ the\ case\ of\ this\ method,\ byte[]\ a\ is\ the\ header,\ and\ b\ is\ the\ rest\ of\ the\ message\r\n

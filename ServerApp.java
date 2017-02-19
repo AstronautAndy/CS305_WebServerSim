@@ -12,8 +12,6 @@ public class ServerApp
      * The standard for inputs will be as follows:
      * args[0] = Propagation Delay
      * args[1] = Transmission Delay
-     * args[2] = Version of HTTP used 
-     * args[3] = URL to the web page we want to access
      */
     public static void main(String[] args) throws Exception
     {

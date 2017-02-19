@@ -17,6 +17,7 @@ public class ClientApp
      * args[0] = Propagation Delay
      * args[1] = Transmission Delay
      * args[2] = binary value representing whether the client will be non-persistent or persistent  
+     * args[3] = cache toggle
      */
     public static void main(String[] args) throws Exception
     {
