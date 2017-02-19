@@ -7,8 +7,8 @@
  */
 public class DelayData
 {
-    static int PropagationDelay; //Remember that the propagation delay will be multiplied by the number of bytes sent
-    static int transmissionDelay;
+    static int PropagationDelay;
+    static int transmissionDelay; //Remember that the transmission delay will be multiplied by the number of bytes sent
     
     /**
      * Constructor for objects of class DelayData
