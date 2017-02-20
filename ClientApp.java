@@ -42,11 +42,11 @@ public class ClientApp
         int code = 0; //Change the code upon reading certain signals from the server
         
         if(args[2].equals("1") ){
-          System.out.println("Now opening a new persistent connection");
+          System.out.println("Now opening a new persistent connection.");
           persistent = true;  
           transportLayer.requestOpening(); //Request an open connection with the server.
         } else{
-            System.out.println("Now opening a new non-persistent connection");
+            System.out.println("Now opening a new non-persistent connection.");
             persistent = false;
         }
         
@@ -65,11 +65,11 @@ public class ClientApp
             startTime = System.currentTimeMillis();
             if(usesCache == true){ //check if the cache has the value you're loooking for
                 if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
-                    System.out.println("URL found in Cache");
+                    System.out.println("URL found in Cache.");
                     byteArray = (byte[]) cache.get(line);
                 }
                 else{//Otherwise, perform the standard object request procedure
-                        System.out.println("Url not found in Cache");
+                        System.out.println("URL not found in Cache.");
                         if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                             byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                             transportLayer.send( sendMessage );
@@ -87,7 +87,7 @@ public class ClientApp
                 }
            }
            else{ //If the program does not use a cache, send a URL request as default
-                   System.out.println("Beginning standard procedure (Non-cache)");
+                   System.out.println("Beginning standard procedure. (Non-cache)");
                    if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                         byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                         transportLayer.send( sendMessage );

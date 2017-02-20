@@ -37,7 +37,7 @@ public class ServerApp
                 break;
             
             if(byteArray[0] == 0){
-                System.out.println("processed open connection request: sending acknowledgement"); 
+                System.out.println("Processed open connection request: Sending Acknowledgement."); 
                 transportLayer.send(ackMessage);
             }
             else if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
