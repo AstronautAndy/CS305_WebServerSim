@@ -1,6 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.*;
 import java.lang.*;
 
@@ -39,15 +40,18 @@ public class ClientApp
         TransportLayer transportLayer = new TransportLayer(false);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
+        MessageInfo.line = line;
         int code = 0; //Change the code upon reading certain signals from the server
         
         if(args[2].equals("1") ){
           System.out.println("Now opening a new persistent connection.");
           persistent = true;  
+          MessageInfo.persistent = true;
           transportLayer.requestOpening(); //Request an open connection with the server.
         } else{
             System.out.println("Now opening a new non-persistent connection.");
             persistent = false;
+            MessageInfo.persistent = true;
         }
         
         if(args[3].equals("1")){//Handle the condition determining whether the sim will use a cache or not
@@ -63,6 +67,7 @@ public class ClientApp
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
+            MessageInfo.lastModified = new Timestamp(System.currentTimeMillis());
             if(usesCache == true){ //check if the cache has the value you're loooking for
                 if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
                     System.out.println("URL found in Cache.");
