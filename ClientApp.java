@@ -105,6 +105,8 @@ public class ClientApp
            }
             //byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
+            System.out.println("client prop: " + DelayData.PropagationDelay);
+            System.out.println("client trans: " + DelayData.transmissionDelay);
             printError(byteArray[0]);
             String str = obtainMessage( byteArray );
             if(byteArray[0] == 3){//If the received value is an object, add it to the map

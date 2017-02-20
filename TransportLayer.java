@@ -4,10 +4,10 @@
  */
 public class TransportLayer
 {
-    byte sys = 0;
+    byte syn = 0;
     byte ack = 1; //Represents a simple TCP acknowledgement that the server has received an open request from the client
     byte objReq = 2;
-    byte[] sysMessage = {sys};
+    byte[] synMessage = {syn};
     byte[] ackMessage = {ack}; //A simple, one element array of bytes
     byte[] objMessage = {objReq};
     private NetworkLayer networkLayer;
@@ -26,7 +26,7 @@ public class TransportLayer
      */
     public boolean requestOpening(){
         System.out.println("Client is requesting opening");
-        send(sysMessage);
+        send(synMessage);
         byte[] response = receive();
         if(response[0] == 1){
             System.out.println("Connection request has been approved by the server. Send Object request now.");
