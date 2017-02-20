@@ -25,7 +25,7 @@ public class TransportLayer
      * server) succeed.
      */
     public boolean requestOpening(){
-        System.out.println("Client is requesting opening");
+        System.out.println("Client is requesting opening.");
         send(synMessage);
         byte[] response = receive();
         if(response[0] == 1){

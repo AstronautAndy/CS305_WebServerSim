@@ -1,8 +1,0 @@
-#BlueJ class context
-comment0.params=
-comment0.target=Cache()
-comment0.text=\r\n\ Constructor\ for\ objects\ of\ class\ Cache\r\n
-comment1.params=url\ value
-comment1.target=void\ addToCache(java.lang.String,\ java.lang.String)
-comment1.text=\r\n\ This\ method\ should\ be\ static\ so\ that\ the\ transportLayer\ will\ be\ able\ to\ add\ URLS\ and\ their\ \r\n\ respective\ data\ to\ the\ HashMap\ without\ having\ to\ instantiate\ a\ Cache\ within\ the\ TransportLayer\r\n
-numComments=2

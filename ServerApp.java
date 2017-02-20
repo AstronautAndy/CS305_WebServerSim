@@ -59,8 +59,6 @@ public class ServerApp
                     ex.printStackTrace();
                 }
             }
-            System.out.println("server prop: " + DelayData.PropagationDelay);
-            System.out.println("server trans: " + DelayData.transmissionDelay);
             //Removed the default code because it isn't necessary
             //String str = new String ( byteArray );
             //System.out.println( str );

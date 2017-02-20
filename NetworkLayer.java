@@ -12,8 +12,7 @@ public class NetworkLayer
     public void send(byte[] payload)
     {
         //Enable delay period
-        int tDelay = payload.length *  DelayData.transmissionDelay; //T. delay needs to scale
-        //int tDelay = payload.length / DelayData.transmissionDelay;
+        int tDelay = (payload.length*8) / DelayData.transmissionDelay;
         //System.out.println("Now sending payload with header: " + payload[0]); //Uncomment this if it makes it easier to understand what's going on
         try{
             Thread.sleep(DelayData.PropagationDelay); 
