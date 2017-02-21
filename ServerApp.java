@@ -50,14 +50,8 @@ public class ServerApp
                 transportLayer.send(ackMessage);
             }
             else if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
-                // last modified secs, persistent, header byte, url
-                String sByteArray = new String("1234513481,0,2,testurl");
-                byteArray = sByteArray.getBytes();
-                parseMessage(byteArray);
-                
-                
-                //byteArray = obtainMessage(byteArray); //Only save the URL request part of the message
-                //String url = new String(byteArray); //Save the url for the object we want to search for
+                byteArray = obtainMessage(byteArray); //Only save the URL request part of the message
+                String url = new String(byteArray); //Save the url for the object we want to search for
                 
                 try{
                     BufferedReader in = new BufferedReader(new FileReader(url));
@@ -78,8 +72,6 @@ public class ServerApp
                 System.out.println("persistent: " + persistent);
                 System.out.println("header: " + header);
                 System.out.println("url: " + url);
-                System.out.println("GET " + MessageInfo.line);
-                System.out.println("Date: " + MessageInfo.lastModified);
             }
             //Removed the default code because it isn't necessary
             //String str = new String ( byteArray );

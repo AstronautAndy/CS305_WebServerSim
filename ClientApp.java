@@ -1,7 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
+import java.io.FileReader;
 import java.util.*;
 import java.lang.*;
 
@@ -12,13 +12,14 @@ import java.lang.*;
  */
 public class ClientApp
 {
-    
+    static TransportLayer transportLayer = new TransportLayer(false);
+    static byte objReq = 2;
+    static byte[] objMessage = {objReq};
     /**
      * The standard for inputs will be as follows:
      * args[0] = Propagation Delay
      * args[1] = Transmission Delay
      * args[2] = binary value representing whether the client will be non-persistent or persistent  
-     * args[3] = cache toggle
      */
     public static void main(String[] args) throws Exception
     {
@@ -29,29 +30,27 @@ public class ClientApp
         long endTime;
         boolean persistent = false; //Will be non-persistent by default
         boolean usesCache = false;
+        /*
         byte objReq = 2;
         byte[] objMessage = {objReq};
-        
+        */
         DelayData.setPropagationDelay( Integer.parseInt(args[0]) ); 
         DelayData.setTransmissionDelay( Integer.parseInt(args[1]) );
         
         HashMap cache = new HashMap();
         
-        TransportLayer transportLayer = new TransportLayer(false);
+        
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line = reader.readLine();
-        MessageInfo.line = line;
         int code = 0; //Change the code upon reading certain signals from the server
         
         if(args[2].equals("1") ){
-          System.out.println("Now opening a new persistent connection.");
+          System.out.println("Now opening a new persistent connection");
           persistent = true;  
-          MessageInfo.persistent = true;
           transportLayer.requestOpening(); //Request an open connection with the server.
         } else{
-            System.out.println("Now opening a new non-persistent connection.");
+            System.out.println("Now opening a new non-persistent connection");
             persistent = false;
-            MessageInfo.persistent = true;
         }
         
         if(args[3].equals("1")){//Handle the condition determining whether the sim will use a cache or not
@@ -67,14 +66,13 @@ public class ClientApp
             //convert lines into byte array, send to transport layer and wait for response
             byte[] byteArray = line.getBytes();
             startTime = System.currentTimeMillis();
-            MessageInfo.lastModified = new Timestamp(System.currentTimeMillis());
             if(usesCache == true){ //check if the cache has the value you're loooking for
                 if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
-                    System.out.println("URL found in Cache.");
+                    System.out.println("URL found in Cache");
                     byteArray = (byte[]) cache.get(line);
                 }
                 else{//Otherwise, perform the standard object request procedure
-                        System.out.println("URL not found in Cache.");
+                        System.out.println("Url not found in Cache");
                         if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                             byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                             transportLayer.send( sendMessage );
@@ -92,7 +90,7 @@ public class ClientApp
                 }
            }
            else{ //If the program does not use a cache, send a URL request as default
-                   System.out.println("Beginning standard procedure. (Non-cache)");
+                   System.out.println("Beginning standard procedure (Non-cache)");
                    if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                         byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                         transportLayer.send( sendMessage );
@@ -149,21 +147,36 @@ public class ClientApp
      */
     static void printError(byte code){
         if(code == 3){
-                System.out.println("Code: 200 OK");
+                System.out.println("Code: 200");
             }
             else if(code == 4){
-                System.out.println("Code: 404 Not Found");
+                System.out.println("Code: 404, file not found");
             }
             return;
     }
     
+    /**
+     * This method needs to retrieve a nested txt file in addition to printing the text found
+     */
     static void RenderHTML(String htmlCode){
         Scanner htmlScanner = new Scanner(htmlCode);
         String token;
+        byte[] NewRequest;
         while( htmlScanner.hasNext() ){
             token = htmlScanner.next();
             if(token.equals("<br>") ){
                 System.out.println();
+            }
+            else if(token.equals("#")){ //Handle nested value
+                token = htmlScanner.next(); //Token is now the URL of the embedded file we want to access
+                try{
+                    BufferedReader in = new BufferedReader(new FileReader(token));
+                    Scanner scanner = new Scanner(in);
+                    String lineFound = scanner.nextLine();
+                    System.out.println(lineFound);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
             }
             else{
                 System.out.print( token + " " );
