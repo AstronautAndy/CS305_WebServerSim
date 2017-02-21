@@ -38,6 +38,25 @@ public class TransportLayer
         }
         
     }
+
+	/**
+     * Server push.
+     */
+    public boolean requestOpeningPush(byte[] line){
+        System.out.println("Client is requesting opening.");
+		line[0] = 6;
+        send(line);
+        byte[] response = receive();
+        if(response[0] == 1){
+            System.out.println("Connection request has been approved by the server. Send Object request now.");
+            return true;
+        }
+        else{
+            System.out.println("Connection request has been denied by the server.");
+            return false;
+        }
+        
+    }
     
     /**
      * Basic function used to send messages between Client and Server

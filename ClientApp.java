@@ -20,7 +20,8 @@ public class ClientApp
      * The standard for inputs will be as follows:
      * args[0] = Propagation Delay
      * args[1] = Transmission Delay
-     * args[2] = binary value representing whether the client will be non-persistent or persistent  
+     * args[2] = binary value representing whether the client will be non-persistent or persistent 
+	 * args[3] = toggle cache 
      */
     public static void main(String[] args) throws Exception
     {
@@ -32,6 +33,7 @@ public class ClientApp
         boolean persistent = false; //Will be non-persistent by default
         boolean usesCache = false;
 		boolean inCache = false;
+		boolean serverPush = false;
         /*
         byte objReq = 2;
         byte[] objMessage = {objReq};
@@ -49,10 +51,25 @@ public class ClientApp
         if(args[2].equals("1") ){
           System.out.println("Now opening a new persistent connection");
           persistent = true;  
-          transportLayer.requestOpening(); //Request an open connection with the server.
+			if (serverPush == true) {
+			byte[] byteArray = line.getBytes();
+			byte[] sendMessage = concatenate(objMessage, byteArray);
+			transportLayer.requestOpeningPush(sendMessage);
+			}
+			else {
+				transportLayer.requestOpening(); //Request an open connection with the server.
+			}
         } else{
             System.out.println("Now opening a new non-persistent connection");
             persistent = false;
+			if (serverPush == true) {
+			byte[] byteArray = line.getBytes();
+			byte[] sendMessage = concatenate(objMessage, byteArray);
+			transportLayer.requestOpeningPush(sendMessage);
+			}
+			else {
+				transportLayer.requestOpening(); //Request an open connection with the server.
+			}
         }
         
         if(args[3].equals("1")){//Handle the condition determining whether the sim will use a cache or not

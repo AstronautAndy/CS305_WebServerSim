@@ -45,11 +45,17 @@ public class ServerApp
             if(byteArray==null)
                 break;
             
-            if(byteArray[0] == 0){
+            if(byteArray[0] == 0 || byteArray[0] == 6){
                 System.out.println("Processed open connection request: Sending Acknowledgement."); 
-                transportLayer.send(ackMessage);
+                if (byteArray[0] == 6) {
+					byteArray[0] = 2;
+				}
+				else {
+					transportLayer.send(ackMessage);
+				}
             }
-            else if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
+
+            if(byteArray[0] == 2){ //Server needs to obtain the rest of the byte array after the header
                 byteArray = obtainMessage(byteArray); //Only save the URL request part of the message
                 String url = new String(byteArray); //Save the url for the object we want to search for
                 
