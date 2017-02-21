@@ -1,6 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.io.FileReader;
 import java.util.*;
 import java.lang.*;
@@ -30,6 +31,7 @@ public class ClientApp
         long endTime;
         boolean persistent = false; //Will be non-persistent by default
         boolean usesCache = false;
+		boolean inCache = false;
         /*
         byte objReq = 2;
         byte[] objMessage = {objReq};
@@ -70,9 +72,11 @@ public class ClientApp
                 if(cache.containsKey(line) ){ //if so, obtain the value from the cache rather than from the server
                     System.out.println("URL found in Cache");
                     byteArray = (byte[]) cache.get(line);
+					inCache = true;
                 }
                 else{//Otherwise, perform the standard object request procedure
                         System.out.println("Url not found in Cache");
+						inCache = false;
                         if(persistent == true){ //Send messages without having to request a new conncetion with the client each time
                             byte[] sendMessage = concatenate(objMessage, byteArray); //Concatenate object request message with the appropriate header
                             transportLayer.send( sendMessage );
@@ -108,14 +112,45 @@ public class ClientApp
            }
             //byteArray = transportLayer.receive();
             endTime = System.currentTimeMillis();
-            printError(byteArray[0]);
             String str = obtainMessage( byteArray );
+			
+			if (inCache == true) {
+				BufferedReader in = new BufferedReader(new FileReader(line));
+            	Scanner scanner = new Scanner(in);
+            	while(scanner.hasNextLine() ){ //Send lines of text over the connection
+            		String textLine = scanner.nextLine();
+					System.out.println(textLine);
+					System.out.println(str);
+					if (textLine.equals(str)) {
+						byteArray[0] = 5;
+					} else {
+						str = textLine;
+						byteArray[0] = 3;
+					}
+            	}
+            }
+
+			// Request Message:
+			System.out.println("");
+			if (persistent == false) {
+				// Non-per
+				System.out.print("HTTP/1.0 ");
+			} else {
+				// Pers
+				System.out.print("HTTP/1.1 ");
+			}
+			printError(byteArray[0]);
+			Timestamp modified = new Timestamp(System.currentTimeMillis());
+			System.out.println("Date: " + modified);
+			Timestamp startStamp = new Timestamp(startTime);
+			System.out.println("Last-Modified: " + startStamp);
             if(byteArray[0] == 3){//If the received value is an object, add it to the map
                 cache.put(line,byteArray);
             }
             RenderHTML(str); //Render the HTML code that we received from the server
             timeToReceive = endTime - startTime;
-            System.out.println(timeToReceive + " ms");
+			System.out.println("");
+            System.out.println("Runtime: " + timeToReceive + " ms");
             line = reader.readLine();
         }
     }
@@ -147,12 +182,13 @@ public class ClientApp
      */
     static void printError(byte code){
         if(code == 3){
-                System.out.println("Code: 200");
-            }
-            else if(code == 4){
-                System.out.println("Code: 404, file not found");
-            }
-            return;
+                System.out.println("200 OK");
+        } else if(code == 4){
+                System.out.println("404 Not Found");
+        } else if(code == 5) {
+				System.out.println("304 Not Modified");
+        }
+        return;
     }
     
     /**

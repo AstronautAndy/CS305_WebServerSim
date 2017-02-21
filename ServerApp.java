@@ -68,10 +68,16 @@ public class ServerApp
                     ex.printStackTrace();
                 }
                 // Request Message:
-                System.out.println("last mod: " + lastModified);
-                System.out.println("persistent: " + persistent);
-                System.out.println("header: " + header);
-                System.out.println("url: " + url);
+				System.out.println("");
+                System.out.print("GET " + url);
+				if (persistent == 0) {
+					// Non-per
+					System.out.println(" HTTP/1.0");
+				} else {
+					System.out.println(" HTTP/1.1");
+				}
+				Timestamp modified = new Timestamp(System.currentTimeMillis());
+				System.out.println("Date: " + modified);
             }
             //Removed the default code because it isn't necessary
             //String str = new String ( byteArray );
